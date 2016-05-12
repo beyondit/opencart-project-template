@@ -10,21 +10,39 @@ class RoboFile extends \Robo\Tasks
     use \Robo\Task\Development\loadTasks;
     use \Robo\Common\TaskIO;
 
+    /**
+     * @var array
+     */
+    private $config;
+
+    /**
+     * @var int
+     */
+    private $server_port = 8000;
+
     public function __construct()
     {
         foreach ($_ENV as $option => $value) {
             if (substr($option, 0, 3) === 'OC_') {
                 $option = strtolower(substr($option, 3));
                 $this->config[$option] = $value;
+            } elseif ($option === 'SERVER_PORT') {
+                $this->server_port = (int) $value;
             }
         }
-        $required = array('db_username', 'password', 'email', 'http_server');
+
+        $this->config['http_server'] = 'http://localhost';
+        $this->config['http_server'] .= ':'.$this->server_port;
+        $this->config['http_server'] .= '/';
+
+        $required = array('db_username', 'password', 'email');
         $missing = array();
         foreach ($required as $config) {
             if (empty($this->config[$config])) {
                 $missing[] = 'OC_'.strtoupper($config);
             }
         }
+
         if (!empty($missing)) {
             $this->printTaskError("<error> Missing ".implode(', ', $missing));
             $this->printTaskError("<error> See .env.sample ");
@@ -40,12 +58,12 @@ class RoboFile extends \Robo\Tasks
             ->chmod('www', 0777, 0000, true)
             ->run();
 
-        // Create new database, drop if is already
+        // Create new database, drop if exists already
         try {
             $conn = new PDO("mysql:host=".$this->config['db_hostname'], $this->config['db_username'], $this->config['db_password']);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $conn->exec("DROP DATABASE IF EXISTS " . $this->config['db_database']);
-            $conn->exec("CREATE DATABASE " . $this->config['db_database']);
+            $conn->exec("DROP DATABASE IF EXISTS `" . $this->config['db_database'] . "`");
+            $conn->exec("CREATE DATABASE `" . $this->config['db_database'] . "`");
         }
         catch(PDOException $e)
         {
@@ -63,7 +81,7 @@ class RoboFile extends \Robo\Tasks
 
     public function opencartRun()
     {
-        $this->taskServer(8000)
+        $this->taskServer($this->server_port)
             ->dir('www')
             ->run();
     }
