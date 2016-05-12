@@ -18,7 +18,12 @@ class RoboFile extends \Robo\Tasks
     /**
      * @var int
      */
-    private $server_port = 8000;
+    private $server_port = 80;
+
+    /**
+     * @var string
+     */
+    private $server_url = 'http://localhost';
 
     public function __construct()
     {
@@ -28,12 +33,12 @@ class RoboFile extends \Robo\Tasks
                 $this->config[$option] = $value;
             } elseif ($option === 'SERVER_PORT') {
                 $this->server_port = (int) $value;
+            } elseif ($option === 'SERVER_URL') {
+                $this->server_url = $value;
             }
         }
 
-        $this->config['http_server'] = 'http://localhost';
-        $this->config['http_server'] .= ':'.$this->server_port;
-        $this->config['http_server'] .= '/';
+        $this->config['http_server']  = $this->server_url.':'.$this->server_port.'/';
 
         $required = array('db_username', 'password', 'email');
         $missing = array();
