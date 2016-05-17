@@ -60,6 +60,8 @@ class RoboFile extends \Robo\Tasks
         $this->taskDeleteDir('www')->run();
         $this->taskFileSystemStack()
             ->mirror('vendor/opencart/opencart/upload', 'www')
+            ->copy('vendor/beyondit/opencart-test-suite/src/test-config.php','www/system/config/test-config.php')
+            ->copy('vendor/beyondit/opencart-test-suite/src/test-catalog-startup.php','www/catalog/controller/startup/test_startup.php')
             ->chmod('www', 0777, 0000, true)
             ->run();
 
