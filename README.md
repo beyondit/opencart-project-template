@@ -2,7 +2,7 @@
 
 ## Getting Started
 
- 1. Create a new project: `composer create-project beyondit/opencart-project-template ./my/project/folder`
+ 1. Create a new project: `composer create-project beyondit/opencart-project-template ./my/project/folder -s dev`
  2. Copy the `.env.sample` file to `.env` and set the configuration parameters respectively
  3. Run `bin/robo opencart:setup` and afterwards `bin/robo opencart:run` on command line
  4. Open `http://localhost:8000` in your browser
