@@ -18,6 +18,6 @@
         </testsuite>
     </testsuites>
     <php>
-        <env name="OC_ROOT" value="/home/stefan/00_php_workspace/opencart-project-template/www/" />
+        <env name="OC_ROOT" value="./www/" />
     </php>
 </phpunit>

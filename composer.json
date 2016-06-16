@@ -2,6 +2,7 @@
     "name": "beyondit/opencart-project-template",
     "description": "Opencart Project Template for Development",
     "license": "GPL-3.0",
+    "type": "project",
     "authors": [
         {
             "name": "stefanhuber",
