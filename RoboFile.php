@@ -13,7 +13,7 @@ class RoboFile extends \Robo\Tasks
     /**
      * @var array
      */
-    private $config;
+    private $opencart_config;
 
     /**
      * @var int
@@ -30,7 +30,7 @@ class RoboFile extends \Robo\Tasks
         foreach ($_ENV as $option => $value) {
             if (substr($option, 0, 3) === 'OC_') {
                 $option = strtolower(substr($option, 3));
-                $this->config[$option] = $value;
+                $this->opencart_config[$option] = $value;
             } elseif ($option === 'SERVER_PORT') {
                 $this->server_port = (int) $value;
             } elseif ($option === 'SERVER_URL') {
@@ -38,12 +38,12 @@ class RoboFile extends \Robo\Tasks
             }
         }
 
-        $this->config['http_server']  = $this->server_url.':'.$this->server_port.'/';
+        $this->opencart_config['http_server']  = $this->server_url.':'.$this->server_port.'/';
 
         $required = array('db_username', 'password', 'email');
         $missing = array();
         foreach ($required as $config) {
-            if (empty($this->config[$config])) {
+            if (empty($this->opencart_config[$config])) {
                 $missing[] = 'OC_'.strtoupper($config);
             }
         }
@@ -60,17 +60,17 @@ class RoboFile extends \Robo\Tasks
         $this->taskDeleteDir('www')->run();
         $this->taskFileSystemStack()
             ->mirror('vendor/opencart/opencart/upload', 'www')
-            ->copy('vendor/beyondit/opencart-test-suite/src/test-config.php','www/system/config/test-config.php')
-            ->copy('vendor/beyondit/opencart-test-suite/src/test-catalog-startup.php','www/catalog/controller/startup/test_startup.php')
+            ->copy('vendor/beyondit/opencart-test-suite/src/upload/system/config/test-config.php','www/system/config/test-config.php')
+            ->copy('vendor/beyondit/opencart-test-suite/src/upload/catalog/controller/startup/test_startup.php','www/catalog/controller/startup/test_startup.php')
             ->chmod('www', 0777, 0000, true)
             ->run();
 
         // Create new database, drop if exists already
         try {
-            $conn = new PDO("mysql:host=".$this->config['db_hostname'], $this->config['db_username'], $this->config['db_password']);
+            $conn = new PDO("mysql:host=".$this->opencart_config['db_hostname'], $this->opencart_config['db_username'], $this->opencart_config['db_password']);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $conn->exec("DROP DATABASE IF EXISTS `" . $this->config['db_database'] . "`");
-            $conn->exec("CREATE DATABASE `" . $this->config['db_database'] . "`");
+            $conn->exec("DROP DATABASE IF EXISTS `" . $this->opencart_config['db_database'] . "`");
+            $conn->exec("CREATE DATABASE `" . $this->opencart_config['db_database'] . "`");
         }
         catch(PDOException $e)
         {
@@ -79,7 +79,7 @@ class RoboFile extends \Robo\Tasks
         $conn = null;
 
         $install = $this->taskExec('php')->arg('www/install/cli_install.php')->arg('install');
-        foreach ($this->config as $option => $value) {
+        foreach ($this->opencart_config as $option => $value) {
             $install->option($option, $value);
         }
         $install->run();

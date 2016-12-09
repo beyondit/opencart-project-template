@@ -10,14 +10,17 @@
         }
     ],
     "require-dev": {
-      "opencart/opencart" : "2.3.0.0_b1",
+      "opencart/opencart" : "2.3.0.2",
       "vlucas/phpdotenv": "~1.1.0",
-      "phpunit/phpunit" : "4.*",
-      "codegyre/robo": "*",
-      "beyondit/opencart-test-suite": "^0.3.0"
+      "phpunit/phpunit" : "~4.0",
+      "beyondit/opencart-test-suite": "~2.3.0",
+      "consolidation/robo": "~1"
     },
     "config": {
       "bin-dir": "bin/",
       "preferred-install": "source"
+    },
+    "extra": {
+      "opencart-dir" : "www"
     }
 }
