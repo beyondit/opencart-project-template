@@ -108,9 +108,9 @@ class RoboFile extends \Robo\Tasks
         $this->taskWatch()
             ->monitor('composer.json', function () {
                 $this->taskComposerUpdate()->run();
-                $this->taskWatch();
+                $this->projectDeploy();
             })->monitor('src/', function () {
-                $this->taskWatch();
+                $this->projectDeploy();
             })->run();
     }
 

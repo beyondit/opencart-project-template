@@ -14,7 +14,8 @@
       "vlucas/phpdotenv": "~1.1.0",
       "phpunit/phpunit" : "~4.0",
       "beyondit/opencart-test-suite": "~2.3.0",
-      "consolidation/robo": "~1"
+      "consolidation/robo": "~1",
+      "henrikbjorn/lurker": "^1.2"
     },
     "config": {
       "bin-dir": "bin/",
